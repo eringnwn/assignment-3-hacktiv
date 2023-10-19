@@ -1,4 +1,4 @@
-const bcrpyt = require("bcrypt");
+const bcrpyt = require("bcryptjs");
 
 function hashPassword(userPassword) {
   const saltRounds = 10;
