@@ -23,11 +23,11 @@ const authentication = async (req, res, next) => {
             message: `User with id ${decode.id} not found in database`,
           }
         }
-        res.locals.user = user.dataValues;
+        req.userData= user.dataValues;
         next();
       })
       .catch((e) => {
-        return res.status(e.code || 500).json(err);
+        return res.status(e.code || 500).json(e);
       })
   } catch (e) {
     res.status(401).json(e);

@@ -16,8 +16,8 @@ exports.getAllPhotos = async (req, res) => {
 // hanya bisa diakses jika user id login sama dengan user id photo
 exports.getPhotoById = async (req, res) => {
     const id = Number(req.params.id);
-    const userData = res.locals.user;
-    
+    const userData = req.userData;
+
     await Photo.findOne({
         where: {
             id,
@@ -26,7 +26,7 @@ exports.getPhotoById = async (req, res) => {
     })
         .then((data) => {
             if (!data) {
-                return res.status(401).json({ message: "Data not found" });
+                return res.status(404).json({ message: "Data Not Found" });
             }
             res.json(data);
         })
@@ -38,7 +38,7 @@ exports.getPhotoById = async (req, res) => {
 // hanya bisa diakses jika user id login sama dengan user id photo
 exports.deletePhotoById = async (req, res) => {
     const id = Number(req.params.id);
-    const userData = res.locals.user;
+    const userData = req.userData;
 
     await Photo.destroy({
         where: {
@@ -48,9 +48,9 @@ exports.deletePhotoById = async (req, res) => {
     })
         .then((data) => {
             if (!data) {
-                return res.status(401).json({ message: "Data not found" });
+                return res.status(404).json({ message: "Data Not Found" });
             }
-            res.status(201).json({ message: "Success Deleted Photo"} );
+            res.status(201).json({ message: "Success Deleted Photo" });
         })
         .catch((e) => {
             res.status(500).json(e);
@@ -64,13 +64,13 @@ exports.updatePhotoById = async (req, res) => {
     const caption = body.caption;
     const image_url = body.image_url;
     const id = Number(req.params.id);
-    const userData = res.locals.user;
+    const userData = req.userData;
 
     await Photo.update({
         title,
         caption,
         image_url
-    },{
+    }, {
         where: {
             id,
             UserId: userData.id,
@@ -80,9 +80,9 @@ exports.updatePhotoById = async (req, res) => {
         .then((data) => {
             console.log(data);
             if (!data[0]) {
-                return res.status(401).json({ message: "Data not found" });
+                return res.status(404).json({ message: "Data Not Found" });
             }
-            res.status(201).json({ message: "Success Updated Photo", data: data[1] } );
+            res.status(201).json({ message: "Success Updated Photo", data: data[1] });
         })
         .catch((e) => {
             res.status(500).json(e);
@@ -95,7 +95,7 @@ exports.createPhoto = async (req, res) => {
     const title = body.title;
     const caption = body.caption;
     const image_url = body.image_url;
-    const userData = res.locals.user;
+    const userData = req.userData;
 
     await Photo.create({
         title,
@@ -104,7 +104,7 @@ exports.createPhoto = async (req, res) => {
         UserId: userData.id
     })
         .then((data) => {
-            res.status(201).json({message: "Created new Photo", data});
+            res.status(201).json({ message: "Created New Photo", data });
         })
         .catch((e) => {
             res.status(500).json(e);
